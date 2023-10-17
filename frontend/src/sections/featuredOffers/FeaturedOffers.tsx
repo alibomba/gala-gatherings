@@ -1,38 +1,82 @@
-
+import { useState, useEffect } from 'react';
 import ServiceTile from '../../components/serviceTile/ServiceTile';
 import { Link } from 'react-router-dom';
+import Loading from '../../components/loading/Loading';
+import Error from '../../components/error/Error';
+import axiosClient from '../../axiosClient';
+import axios from 'axios';
 
 import styles from './featuredOffers.module.css';
 
 const FeaturedOffers = () => {
+    const [offers, setOffers] = useState<FeaturedOffer[]>([]);
+    const [noResults, setNoResults] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const source = axios.CancelToken.source();
+
+        axiosClient({
+            method: 'get',
+            url: '/featured-offers',
+            cancelToken: source.token
+        })
+            .then(res => {
+                setOffers(res.data);
+            })
+            .catch(err => {
+                if (err?.response?.status === 404) {
+                    setNoResults(true);
+                }
+                else {
+                    setError('Coś poszło nie tak, spróbuj ponownie później...');
+                }
+            })
+            .finally(() => setLoading(false));
+
+        return () => {
+            source.cancel();
+        }
+
+    }, []);
+
+
+    if (noResults) {
+        return <></>
+    }
+
+    if (loading) {
+        return <Loading />
+    }
+
+    if (error) {
+        return <Error>{error}</Error>
+    }
+
     return (
-        <section className={styles.section}>
-            <h2 className={styles.section__heading}>Polecane pakiety</h2>
-            <div className={styles.section__column}>
-                <ServiceTile
-                    title='Ekskluzywny pakiet ślubny'
-                    image='ekskluzywny-pakiet-slubny.webp'
-                    price='25 000'
-                >
-                    Nasz najbardziej luksusowy pakiet dla przyszłych małżonków, obejmujący kompleksową organizację ślubu, w tym wybór lokacji, dekoracje, catering, i koordynację. To rozwiązanie dla tych, którzy marzą o bajkowym ślubie.
-                </ServiceTile>
-                <ServiceTile
-                    title='Pakiet urodzinowy deluxe'
-                    image='pakiet-urodzinowy-deluxe.webp'
-                    price='10 000'
-                >
-                    Idealny pakiet na urodziny, który zawiera przygotowanie dekoracji, katering, rozrywkę oraz koordynację. Zapewniamy, że Twój dzień będzie pełen zabawy i niespodzianek.
-                </ServiceTile>
-                <ServiceTile
-                    title='Impreza firmowa all-inclusive'
-                    image='impreza-firmowa-all-inclusive.webp'
-                    price='11 000'
-                >
-                    Nasz pakiet dla firm, który obejmuje organizację konferencji, bankietów, eventów integracyjnych i więcej. Zapewniamy kompleksową obsługę, od planowania po realizację.
-                </ServiceTile>
-            </div>
-            <Link to='/cennik' className={styles.section__button} >Zobacz więcej</Link>
-        </section>
+        <>
+            {offers.length > 0 &&
+                <section className={styles.section}>
+                    <h2 className={styles.section__heading}>Polecane pakiety</h2>
+                    <div className={styles.section__column}>
+                        {offers.map(offer => {
+                            return (
+                                <ServiceTile
+                                    key={offer.service.id}
+                                    title={offer.service.title}
+                                    image={offer.service.image}
+                                    price={offer.service.price}
+                                >
+                                    {offer.service.description}
+                                </ServiceTile>
+                            )
+                        })}
+                    </div>
+                    <Link to='/cennik' className={styles.section__button} >Zobacz więcej</Link>
+                </section>
+            }
+        </>
     )
 }
 
