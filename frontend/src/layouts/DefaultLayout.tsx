@@ -6,7 +6,7 @@ const DefaultLayout = () => {
         <>
             <Header />
             <Outlet />
-            <Footer />
+            {/* <Footer /> */}
         </>
     )
 }
