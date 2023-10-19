@@ -1,9 +1,15 @@
 import { Request, Response, Router } from 'express';
 import { PortfolioProject, PrismaClient } from '@prisma/client';
 import PaginationResponse from '../types/PaginationResponse';
+import Redis from 'ioredis';
 
 const portfolioRoutes: Router = Router();
 const prisma = new PrismaClient();
+const redis = new Redis({
+    host: process.env.REDIS_HOST,
+    port: parseInt(process.env.REDIS_PORT as string),
+    password: process.env.REDIS_PASSWORD
+});
 
 const PER_PAGE = 8;
 
@@ -26,8 +32,14 @@ portfolioRoutes.get('/portfolio', async (req: Request, res: Response) => {
 
 portfolioRoutes.get('/project/:id', async (req: Request, res: Response) => {
     const { id } = req.params;
+    const cachedProject = await redis.get(`project.${id}`, (err, result) => {
+        if (err) return res.json(err);
+    });
+    if (cachedProject) return res.json(JSON.parse(cachedProject));
     const project = await prisma.portfolioProject.findUnique({ where: { id }, include: { images: true } });
     if (!project) return res.status(404).json({ message: 'Projekt nie istnieje' });
+    await redis.set(`project.${id}`, JSON.stringify(project));
+    await redis.expire(`project.${id}`, 3600);
     res.json(project);
 });
 

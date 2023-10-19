@@ -8,6 +8,7 @@ import reservationRoutes from './routes/reservationRoutes';
 import serviceRoutes from './routes/serviceRoutes';
 import portfolioRoutes from './routes/portfolioRoutes';
 import locationRoutes from './routes/locationRoutes';
+import jobApplicationRoutes from './routes/jobApplicationRoutes';
 
 const app: Application = express();
 
@@ -21,6 +22,7 @@ app.use('/api', reservationRoutes);
 app.use('/api', serviceRoutes);
 app.use('/api', portfolioRoutes);
 app.use('/api', locationRoutes);
+app.use('/api', jobApplicationRoutes);
 
 const PORT = process.env.SERVER_PORT || 8000;
 

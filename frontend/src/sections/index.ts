@@ -7,3 +7,4 @@ export { default as Awards } from './awards/Awards';
 export { default as CommonSection } from './commonSection/CommonSection';
 export { default as FeaturedOffers } from './featuredOffers/FeaturedOffers';
 export { default as Footer } from './footer/Footer';
+export { default as AplikujHero } from './aplikujHero/AplikujHero';
