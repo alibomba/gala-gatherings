@@ -10,6 +10,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Admin {
+  id       String @id @default(uuid())
+  login    String @unique
+  password String
+}
+
+model RefreshToken {
+  id       String   @id @default(uuid())
+  token    String   @unique
+  issuedAt DateTime @default(now()) @db.Timestamptz()
+}
+
 model Reservation {
   id      String   @id @default(uuid())
   service String   @db.VarChar(255)
@@ -55,14 +67,15 @@ model Location {
 }
 
 model JobApplication {
-  id          String  @id @default(uuid())
-  firstName   String  @db.VarChar(100)
-  lastName    String  @db.VarChar(100)
-  email       String  @db.VarChar(55)
-  phoneNumber String  @db.VarChar(30)
-  jobPosition String  @db.VarChar(255)
+  id          String   @id @default(uuid())
+  firstName   String   @db.VarChar(100)
+  lastName    String   @db.VarChar(100)
+  email       String   @db.VarChar(55)
+  phoneNumber String   @db.VarChar(30)
+  jobPosition String   @db.VarChar(255)
   cvUrl       String?
   details     String?
+  sentAt      DateTime @default(now()) @db.Timestamptz()
 }
 
 model ContactMessage {
@@ -73,4 +86,5 @@ model ContactMessage {
   phoneNumber String  @db.VarChar(30)
   subject     String  @db.VarChar(255)
   details     String  @db.Text
+  opened      Boolean @default(false)
 }
