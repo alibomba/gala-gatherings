@@ -1,9 +1,0 @@
--header(linki: cennik, portfolio, o nas, kontakt)
--hero(slider paru zdjec z wydarzen z kropkami na dole, heading, text i CTA z linkiem "Zobacz oferte")
--ikony z glownymi uslugami jakie oferuje firma(urodziny, wesela, pikniki, stypy i inne)
--najblizszy wolny termin do rezerwacji jakiegos wydarzenia(fajnie opakowane zeby zachecic klienta do natychmiastowej rezerwacji, moze jakis countdown)
--testimonials
--certyfikaty i licencje
--od lat na rynku
--polecane pakiety uslug
--footer(linki: cennik, portfolio, lokacje, aplikuj, o firmie, kontakt, proces organizacji(jak to dziala))

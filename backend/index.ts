@@ -14,7 +14,7 @@ import contactRoutes from './routes/contactRoutes';
 const app: Application = express();
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL
+    origin: [process.env.FRONTEND_URL as string, process.env.CMS_URL as string]
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

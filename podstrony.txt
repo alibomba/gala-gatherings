@@ -1,8 +1,0 @@
--homepage
--uslugi i szacowany cennik(na gorze pasek position sticky z linkami do "kontakt", "jak to dziala" i "lokacje")
--portfolio(jakies projekty, ktore juz sie wydarzyly, dla kazdego projektu tytul, opis, data, i galeria zdjec)
--lokacje(jakis fajny sposob zaprezentowania miejsc w ktorych firma organizuje swoje wydarzenia)
--aplikuj(mozliwosc aplikowania o prace)
--o nas
--kontakt(sluzacy glownie do rezerwacji terminow wydarzen)
--jak to dziala(wytlumaczenie procesu organizacji wydarzenia)
