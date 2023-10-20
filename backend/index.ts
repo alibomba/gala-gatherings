@@ -9,6 +9,7 @@ import serviceRoutes from './routes/serviceRoutes';
 import portfolioRoutes from './routes/portfolioRoutes';
 import locationRoutes from './routes/locationRoutes';
 import jobApplicationRoutes from './routes/jobApplicationRoutes';
+import contactRoutes from './routes/contactRoutes';
 
 const app: Application = express();
 
@@ -23,6 +24,7 @@ app.use('/api', serviceRoutes);
 app.use('/api', portfolioRoutes);
 app.use('/api', locationRoutes);
 app.use('/api', jobApplicationRoutes);
+app.use('/api', contactRoutes);
 
 const PORT = process.env.SERVER_PORT || 8000;
 
