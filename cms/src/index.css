@@ -20,6 +20,9 @@
 
   /* font */
   --font: 'Mohave', sans-serif;
+
+  /* transition */
+  --transition: all 200ms ease;
 }
 
 body {

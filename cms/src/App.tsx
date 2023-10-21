@@ -10,7 +10,8 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<DefaultLayout />}>
-            <Route path="/rezerwacje" element={<Reservations />} />
+            <Route path='/' element={<Reservations />} />
+            <Route path='/rezerwacje' element={<Reservations />} />
             <Route path="/rezerwacje/:id" element={<Reservation />} />
             <Route path='/uslugi' element={<Services />} />
             <Route path='/uslugi/:id' element={<Service />} />
