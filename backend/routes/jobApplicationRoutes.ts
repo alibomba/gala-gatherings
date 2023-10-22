@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import { PrismaClient } from '@prisma/client';
 import jobApplicationUpload from '../middleware/jobApplicationUpload';
 import { MulterError } from 'multer';
-import deleteCvFile from '../utilities/deleteCvFile';
+import deleteFile from '../utilities/deleteFile';
 
 const jobApplicationRoutes: Router = Router();
 const prisma = new PrismaClient();
@@ -30,52 +30,52 @@ jobApplicationRoutes.post('/job-application', async (req: Request, res: Response
             filePath = `${__dirname}/../public/cvs/${cvFile.filename}`;
         }
         if (!firstName) {
-            deleteCvFile(filePath);
+            deleteFile(filePath);
             return res.status(422).json({ message: 'Imię jest wymagane' });
         }
         if (firstName.length > 100) {
-            deleteCvFile(filePath);
+            deleteFile(filePath);
             return res.status(422).json({ message: 'Imię może mieć maksymalnie 100 znaków' });
         }
         if (!lastName) {
-            deleteCvFile(filePath);
+            deleteFile(filePath);
             return res.status(422).json({ message: 'Nazwisko jest wymagane' });
         }
         if (lastName.length > 100) {
-            deleteCvFile(filePath);
+            deleteFile(filePath);
             return res.status(422).json({ message: 'Nazwisko może mieć maksymalnie 100 znaków' });
         }
         if (!email) {
-            deleteCvFile(filePath);
+            deleteFile(filePath);
             return res.status(422).json({ message: 'Adres e-mail jest wymagany' });
         }
         if (email.length > 55) {
-            deleteCvFile(filePath);
+            deleteFile(filePath);
             return res.status(422).json({ message: 'Adres e-mail może mieć maksymalnie 55 znaków' });
         }
         const emailRegex = new RegExp(/^[\w\.-]+@[\w\.-]+\.\w+$/);
         if (!emailRegex.test(email)) {
-            deleteCvFile(filePath);
+            deleteFile(filePath);
             return res.status(422).json({ message: 'Podaj poprawny adres e-mail' });
         }
         if (!phoneNumber) {
-            deleteCvFile(filePath);
+            deleteFile(filePath);
             return res.status(422).json({ message: 'Numer telefonu jest wymagany' });
         }
         if (phoneNumber.length > 30) {
-            deleteCvFile(filePath);
+            deleteFile(filePath);
             return res.status(422).json({ message: 'Numer telefonu może mieć maksymalnie 30 znaków' });
         }
         if (!jobPosition) {
-            deleteCvFile(filePath);
+            deleteFile(filePath);
             return res.status(422).json({ message: 'Pozycja w firmie jest wymagana' });
         }
         if (jobPosition.length > 255) {
-            deleteCvFile(filePath);
+            deleteFile(filePath);
             return res.status(422).json({ message: 'Pozycja w firmie może mieć maksymalnie 255 znaków' });
         }
         if (details && details.length > 700) {
-            deleteCvFile(filePath);
+            deleteFile(filePath);
             return res.status(422).json({ message: 'Sekcja o sobie może mieć maksymalnie 700 znaków' });
         }
 

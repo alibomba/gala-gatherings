@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-function deleteCvFile(path: string | undefined): void {
+function deleteFile(path: string | undefined): void {
     if (path) {
         fs.unlink(path, err => {
             if (err) console.error(`File ${path} failed to be deleted`);
@@ -8,4 +8,4 @@ function deleteCvFile(path: string | undefined): void {
     }
 }
 
-export default deleteCvFile;
+export default deleteFile;

@@ -32,7 +32,14 @@ const Reservations = () => {
                 setIsMore(data.isMore);
                 setReservations(data.reservations);
             })
-            .catch(err => setError('Coś poszło nie tak, spróbuj ponownie później...'))
+            .catch(err => {
+                if (err?.response?.status === 404) {
+                    setIsMore(false);
+                }
+                else {
+                    setError('Coś poszło nie tak, spróbuj ponownie później...');
+                }
+            })
             .finally(() => setLoading(false));
 
         return () => {
@@ -113,19 +120,21 @@ const Reservations = () => {
             </form>
             <section className={styles.main__reservations}>
                 {
-                    reservations.length > 0 &&
-                    reservations.map(item => {
-                        return (
-                            <ReservationTile
-                                key={item.id}
-                                id={item.id}
-                                service={item.service}
-                                price={item.price}
-                                date={item.date}
-                                setReservations={setReservations}
-                            />
-                        )
-                    })
+                    reservations.length > 0 ?
+                        reservations.map(item => {
+                            return (
+                                <ReservationTile
+                                    key={item.id}
+                                    id={item.id}
+                                    service={item.service}
+                                    price={item.price}
+                                    date={item.date}
+                                    setReservations={setReservations}
+                                />
+                            )
+                        })
+                        :
+                        <p className={styles.main__noResults}>Brak rezerwacji</p>
                 }
             </section>
             {

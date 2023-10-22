@@ -46,6 +46,7 @@ reservationRoutes.get('/nearest-date', async (req: Request, res: Response) => {
 
 reservationRoutes.get('/reservations', jwtAuthentication, async (req: Request, res: Response) => {
     const { howManyParam } = req.query;
+    if (await prisma.reservation.count() === 0) return res.sendStatus(404);
     if (!howManyParam) return res.status(422).json({ message: 'Ilość jest wymagana' });
     const howMany = parseInt(howManyParam as string);
     if (isNaN(howMany)) return res.status(422).json({ message: 'Ilość musi być liczbą całkowitą' });

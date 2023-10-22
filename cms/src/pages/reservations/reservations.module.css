@@ -29,8 +29,22 @@
     cursor: pointer;
 }
 
+.main__noResults {
+    font-size: 3rem;
+    font-weight: 500;
+    color: white;
+    background-color: rgba(255, 0, 0, .5);
+    padding: 2em;
+    border-radius: 20px;
+    text-align: center;
+}
+
 @media(max-width:500px) {
     .main {
         padding: 1em;
+    }
+
+    .main__noResults {
+        font-size: 2rem;
     }
 }
