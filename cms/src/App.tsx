@@ -17,6 +17,7 @@ function App() {
             <Route path='/uslugi/dodaj' element={<Service />} />
             <Route path='/uslugi/:id' element={<Service />} />
             <Route path='/portfolio' element={<Portfolio />} />
+            <Route path='/portfolio/dodaj' element={<Project />} />
             <Route path='/portfolio/:id' element={<Project />} />
             <Route path='/lokacje' element={<Locations />} />
             <Route path='/lokacje/:id' element={<Location />} />

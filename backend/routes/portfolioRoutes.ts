@@ -34,6 +34,22 @@ portfolioRoutes.get('/portfolio', async (req: Request, res: Response) => {
     res.json(response);
 });
 
+portfolioRoutes.get('/projects', jwtAuthentication, async (req: Request, res: Response) => {
+    const { howManyParam } = req.query;
+    if (!howManyParam) return res.status(422).json({ message: 'Ilość jest wymagana' });
+    const howMany = parseInt(howManyParam as string);
+    if (isNaN(howMany)) return res.status(422).json({ message: 'Ilość musi być liczbą całkowitą' });
+    if (howMany < 1) return res.status(422).json({ message: 'Ilość nie może być mniejsza od 1' });
+    let isMore;
+    if (await prisma.portfolioProject.count() <= howMany) isMore = false;
+    else isMore = true;
+    const projects = await prisma.portfolioProject.findMany({ take: howMany, include: { images: true } });
+    res.json({
+        isMore,
+        projects
+    });
+});
+
 portfolioRoutes.get('/project/:id', async (req: Request, res: Response) => {
     const { id } = req.params;
     const cachedProject = await redis.get(`project.${id}`, (err, result) => {
@@ -60,7 +76,7 @@ portfolioRoutes.post('/project', jwtAuthentication, async (req: Request, res: Re
             }
         }
 
-        const { title, content } = req.body;
+        const { title, content, date } = req.body;
 
         let images: Express.Multer.File[] = [];
         let imagesPaths: string[] = [];
@@ -87,12 +103,17 @@ portfolioRoutes.post('/project', jwtAuthentication, async (req: Request, res: Re
             deleteFiles(imagesPaths);
             return res.status(422).json({ message: 'Treść może mieć maksymalnie 1500 znaków' });
         }
+        if (!date) {
+            deleteFiles(imagesPaths);
+            return res.status(422).json({ message: 'Data jest wymagana' });
+        }
 
         try {
             const newProject = await prisma.portfolioProject.create({
                 data: {
                     title,
-                    content
+                    content,
+                    date: new Date(date)
                 }
             });
             await Promise.all([images.forEach(async (image) => {
@@ -126,7 +147,7 @@ portfolioRoutes.put('/project/:id', jwtAuthentication, async (req: Request, res:
             }
         }
 
-        const { title, content } = req.body;
+        const { title, content, date } = req.body;
 
         let images: Express.Multer.File[] = [];
         let imagesPaths: string[] = [];
@@ -153,13 +174,18 @@ portfolioRoutes.put('/project/:id', jwtAuthentication, async (req: Request, res:
             deleteFiles(imagesPaths);
             return res.status(422).json({ message: 'Treść może mieć maksymalnie 1500 znaków' });
         }
+        if (!date) {
+            deleteFiles(imagesPaths);
+            return res.status(422).json({ message: 'Data jest wymagana' });
+        }
 
         try {
             await prisma.portfolioProject.update({
                 where: { id },
                 data: {
                     title,
-                    content
+                    content,
+                    date: new Date(date)
                 }
             });
             if (images.length > 0) {
