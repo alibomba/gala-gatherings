@@ -26,7 +26,7 @@ serviceRoutes.get('/services', async (req: Request, res: Response) => {
 
 serviceRoutes.get('/services/:id', jwtAuthentication, async (req: Request, res: Response) => {
     const { id } = req.params;
-    const service = await prisma.service.findUnique({ where: { id } });
+    const service = await prisma.service.findUnique({ where: { id }, include: { FeaturedOffer: true } });
     if (!service) return res.status(404).json({ message: 'Usługa nie istnieje' });
     res.json(service);
 });
@@ -98,7 +98,7 @@ serviceRoutes.post('/services', jwtAuthentication, async (req: Request, res: Res
                     price
                 }
             });
-            if (isFeatured) {
+            if (isFeatured === 'true') {
                 await prisma.featuredOffer.create({
                     data: {
                         serviceId: newService.id
@@ -180,14 +180,14 @@ serviceRoutes.put('/services/:id', jwtAuthentication, async (req: Request, res: 
                     price
                 }
             });
-            if (isFeatured && !await prisma.featuredOffer.findUnique({ where: { serviceId: id } })) {
+            if (isFeatured === 'true' && !await prisma.featuredOffer.findUnique({ where: { serviceId: id } })) {
                 await prisma.featuredOffer.create({
                     data: {
                         serviceId: id
                     }
                 });
             }
-            else if (!isFeatured && await prisma.featuredOffer.findUnique({ where: { serviceId: id } })) {
+            else if (isFeatured === 'false' && await prisma.featuredOffer.findUnique({ where: { serviceId: id } })) {
                 await prisma.featuredOffer.delete({ where: { serviceId: id } });
             }
             res.sendStatus(204);

@@ -63,6 +63,7 @@ const Services = () => {
                             title={service.title}
                             price={service.price}
                             image={service.image}
+                            setServices={setServices}
                         />)
                     })
                 }

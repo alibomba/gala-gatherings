@@ -1,7 +1,9 @@
-
+import { useState } from 'react';
+import Error from '../error/Error';
 import { MdEdit } from 'react-icons/md';
 import { AiFillDelete } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
+import axiosClient from '../../axiosClient';
 
 import styles from './serviceTile.module.css';
 
@@ -10,9 +12,34 @@ interface Props {
     title: string;
     price: string;
     image: string;
+    setServices: React.Dispatch<React.SetStateAction<Service[]>>;
 }
 
-const ServiceTile = ({ id, title, price, image }: Props) => {
+const ServiceTile = ({ id, title, price, image, setServices }: Props) => {
+    const [error, setError] = useState<string | null>(null);
+
+    async function deleteService() {
+        const confirmation = window.confirm('Czy na pewno chcesz usunąć usługę?');
+        if (confirmation) {
+            try {
+                await axiosClient({
+                    method: 'delete',
+                    url: `/services/${id}`
+                });
+                setServices(prev => {
+                    const newValue = prev.filter(item => item.id !== id);
+                    return newValue;
+                })
+            } catch (err) {
+                setError('Coś poszło nie tak, spróbuj ponownie później...');
+            }
+        }
+    }
+
+    if (error) {
+        return <Error>{error}</Error>
+    }
+
     return (
         <article className={styles.service}>
             <div className={styles.service__data}>
@@ -23,7 +50,7 @@ const ServiceTile = ({ id, title, price, image }: Props) => {
             <Link to={`/uslugi/${id}`} className={`${styles.service__button} ${styles.service__edit}`}>
                 <MdEdit />
             </Link>
-            <button className={`${styles.service__button} ${styles.service__delete}`}>
+            <button onClick={deleteService} className={`${styles.service__button} ${styles.service__delete}`}>
                 <AiFillDelete />
             </button>
         </article>
