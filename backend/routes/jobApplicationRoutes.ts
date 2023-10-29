@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import jobApplicationUpload from '../middleware/jobApplicationUpload';
 import { MulterError } from 'multer';
 import deleteFile from '../utilities/deleteFile';
+import jwtAuthentication from '../middleware/jwtAuthentication';
 
 const jobApplicationRoutes: Router = Router();
 const prisma = new PrismaClient();
@@ -97,6 +98,33 @@ jobApplicationRoutes.post('/job-application', async (req: Request, res: Response
         }
 
     });
+});
+
+jobApplicationRoutes.get('/job-applications', jwtAuthentication, async (req: Request, res: Response) => {
+    const { howManyParam } = req.query;
+    if (!howManyParam) return res.status(422).json({ message: 'Ilość jest wymagana' });
+    const howMany = parseInt(howManyParam as string);
+    if (isNaN(howMany)) return res.status(422).json({ message: 'Ilość musi być liczbą całkowitą' });
+    if (howMany < 1) return res.status(422).json({ message: 'Ilość nie może być mniejsza od 1' });
+    let isMore;
+    if (await prisma.jobApplication.count() <= howMany) {
+        isMore = false;
+    }
+    else {
+        isMore = true;
+    }
+    const applications = await prisma.jobApplication.findMany({ take: howMany, orderBy: { sentAt: 'desc' } });
+    res.json({
+        applications,
+        isMore
+    });
+});
+
+jobApplicationRoutes.get('/job-applications/:id', jwtAuthentication, async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const application = await prisma.jobApplication.findUnique({ where: { id } });
+    if (!application) return res.sendStatus(404);
+    res.json(application);
 });
 
 
