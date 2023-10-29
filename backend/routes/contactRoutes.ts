@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { PrismaClient } from '@prisma/client';
+import jwtAuthentication from '../middleware/jwtAuthentication';
 
 const contactRoutes: Router = Router();
 const prisma = new PrismaClient();
@@ -34,6 +35,29 @@ contactRoutes.post('/contact', async (req: Request, res: Response) => {
     } catch (err) {
         res.sendStatus(500);
     }
+});
+
+contactRoutes.get('/contact', jwtAuthentication, async (req: Request, res: Response) => {
+    const { howManyParam } = req.query;
+    if (!howManyParam) return res.status(422).json({ message: 'Ilość jest wymagana' });
+    const howMany = parseInt(howManyParam as string);
+    if (isNaN(howMany)) return res.status(422).json({ message: 'Ilość musi być liczbą całkowitą' });
+    if (howMany < 1) return res.status(422).json({ message: 'Ilość nie może być mniejsza od 1' });
+    let isMore;
+    if (await prisma.contactMessage.count() <= howMany) isMore = false;
+    else isMore = true;
+    const messages = await prisma.contactMessage.findMany({ take: howMany });
+    res.json({
+        messages,
+        isMore
+    });
+});
+
+contactRoutes.get('/contact/:id', jwtAuthentication, async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const message = await prisma.contactMessage.findUnique({ where: { id } });
+    if (!message) return res.sendStatus(404);
+    res.json(message);
 });
 
 export default contactRoutes;
