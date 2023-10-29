@@ -1,7 +1,7 @@
 export { default as Application } from './application/Application';
 export { default as Applications } from './applications/Applications';
 export { default as Location } from './location/Location';
-export { default as Locations } from './locations/Location';
+export { default as Locations } from './locations/Locations';
 export { default as Login } from './login/Login';
 export { default as Message } from './message/Message';
 export { default as Messages } from './messages/Messages';

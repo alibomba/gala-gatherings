@@ -21,6 +21,7 @@ function App() {
             <Route path='/portfolio/:id' element={<Project />} />
             <Route path='/lokacje' element={<Locations />} />
             <Route path='/lokacje/:id' element={<Location />} />
+            <Route path='/lokacje/dodaj' element={<Location />} />
             <Route path='/aplikacje' element={<Applications />} />
             <Route path='/aplikacje/:id' element={<Application />} />
             <Route path='/wiadomosci' element={<Messages />} />
