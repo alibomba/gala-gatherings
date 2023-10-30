@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { BsCardImage } from 'react-icons/bs';
-import { format } from 'date-fns';
+import {format} from 'date-fns';
 import Error from '../../components/error/Error';
 import Popup from '../../components/popup/Popup';
 import axiosClient from '../../axiosClient';

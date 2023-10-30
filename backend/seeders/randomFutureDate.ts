@@ -1,4 +1,4 @@
-import { format, sub, add } from 'date-fns';
+const {format, add} = require('date-fns')
 
 function randomFutureDate(maxDaysInFuture: number): string {
     const currentDate = new Date();

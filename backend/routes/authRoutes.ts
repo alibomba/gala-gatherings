@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { PrismaClient } from '@prisma/client';
 import UserOptionalPassword from '../types/UserOptionalPassword';
-import bcrypt from 'bcrypt';
+import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import jwtAuthentication from '../middleware/jwtAuthentication';
 
@@ -21,7 +21,7 @@ authRoutes.post('/login', async (req: Request, res: Response) => {
     if (!login || !password) return res.status(401).json({ message: 'Niepoprawny login lub hasło' });
     const userFound = await prisma.admin.findUnique({ where: { login } });
     if (!userFound) return res.status(401).json({ message: 'Niepoprawny login lub hasło' });
-    if (!await bcrypt.compare(password, userFound.password)) return res.status(401).json({ message: 'Niepoprawny login lub hasło' });
+    if(!await bcryptjs.compare(password, userFound.password)) return res.status(401).json({message: 'Niepoprawny login lub hasło'})
     const user: UserOptionalPassword = { ...userFound };
     delete user.password;
     const accessToken = jwt.sign(user, process.env.JWT_SECRET as string, { expiresIn: process.env.JWT_TTL });

@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { add, sub } from 'date-fns';
+const {add, sub} = require('date-fns');
 import formatDate from '../utilities/formatDate';
 import jwtAuthentication from '../middleware/jwtAuthentication';
 

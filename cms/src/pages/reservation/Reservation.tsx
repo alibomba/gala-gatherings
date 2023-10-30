@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { format } from 'date-fns';
+import {format} from 'date-fns';
 import Error from '../../components/error/Error';
 import Loading from '../../components/loading/Loading';
 import Popup from '../../components/popup/Popup';
