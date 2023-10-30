@@ -60,4 +60,20 @@ contactRoutes.get('/contact/:id', jwtAuthentication, async (req: Request, res: R
     res.json(message);
 });
 
+contactRoutes.post('/set-as-seen/:id', jwtAuthentication, async (req: Request, res: Response) => {
+    const { id } = req.params;
+    if (!await prisma.contactMessage.findUnique({ where: { id } })) return res.sendStatus(404);
+    try {
+        await prisma.contactMessage.update({
+            where: { id },
+            data: {
+                opened: true
+            }
+        });
+        res.sendStatus(204);
+    } catch (err) {
+        res.sendStatus(500);
+    }
+});
+
 export default contactRoutes;
