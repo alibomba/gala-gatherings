@@ -1,7 +1,0 @@
--rezerwacje (CRUD)
--uslugi i pakiety (CRUD, dodawanie do featured)
--portfolio(CRUD)
--lokacje(CRUD)
--aplikacje (wyswietlanie aplikacji o prace i mozliwosc pobrania cv)
--wiadomosci
-
